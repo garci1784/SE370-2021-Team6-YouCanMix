@@ -1,5 +1,7 @@
 
 
+import SQL.CreateDrinkTable;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
@@ -280,7 +282,9 @@ public class YouCanMix extends JFrame {
 	    //might want to make multiple inputs for different ingredients/allow user to add more
 	    //have to account for quantities of each ingredient/ make user input
 	
-	    
+
+
+
 	    //button to be triggered once cocktail is fully inputed
 	    JButton Enter = new JButton("Enter");
 	    Enter.addActionListener(new ActionListener() {
@@ -290,6 +294,8 @@ public class YouCanMix extends JFrame {
 	            if (!s.equals("")) {
 	                findTextField.setText(s);
 	            }
+				Drink drink = new Drink(textCocktailName.getText(), textIngredients.getText());
+				drink.insertDrink();
 	        }
 	    });
 	    
@@ -382,6 +388,8 @@ public class YouCanMix extends JFrame {
 			      	new YouCanMix().setVisible(true);
 			}
 		});
+		// Creates drinks table in MySQL DB
+		CreateDrinkTable drinkTable = new CreateDrinkTable();
 	}
 
 
