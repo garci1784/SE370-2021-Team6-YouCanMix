@@ -27,7 +27,8 @@ public class YouCanMix extends JFrame {
 	//text fields to search/ enter info
     private JTextField findTextField = new JTextField(30);
     private JTextField textCocktailName = new JTextField(30);
-    private JTextField textIngredients = new JTextField(30);
+    private JTextField textIngredient = new JTextField(30);
+    private JTextField textQuantity = new JTextField(30);
     
     // create a new buttons
  	private	JButton Menu = new JButton("Main Menu");
@@ -36,8 +37,9 @@ public class YouCanMix extends JFrame {
  	private	JButton Search = new JButton("Search For Drinks");
  	private	JButton Rate = new JButton("Rate Drinks");
  	private	JButton Create = new JButton("Create a Drink");
+ 	private	JButton findButton = new JButton("Search");
 
-	
+ 	
 	public YouCanMix() {
 		// displays YouCanMix title on every window
 		super("YouCanMix");
@@ -56,26 +58,33 @@ public class YouCanMix extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				System.exit(0);
 			}
-		});       
-		View.addActionListener(new ActionListener() {//	WHEN VIEW BUTTON IS PRESSED
+		});
+		Search.addActionListener(new ActionListener() {//	WHEN SEARCH  BUTTON IS PRESSED
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				searchDrinks();
+			}
+		});
+	
+		View.addActionListener(new ActionListener() {//	WHEN VIEW DRINKS BUTTON IS PRESSED
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				drinkCatalogue();
 			}
-		}); 
-		Search.addActionListener(new ActionListener() {//	WHEN SEARCH BUTTON IS PRESSED
+		});		
+		Search.addActionListener(new ActionListener() {//	WHEN SEARCH FOR DRINKS BUTTON IS PRESSED
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				searchDrinks();
 			}
 		}); 
-		Rate.addActionListener(new ActionListener() {//	WHEN RATE BUTTON IS PRESSED
+		Rate.addActionListener(new ActionListener() {//	WHEN RATE DRINKS BUTTON IS PRESSED
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				rateDrinks();
 			}
 		}); 
-		Create.addActionListener(new ActionListener() {//	WHEN CREATE BUTTON IS PRESSED
+		Create.addActionListener(new ActionListener() {//	WHEN CREATE DRINKS BUTTON IS PRESSED
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				createDrinks();
@@ -267,6 +276,8 @@ public class YouCanMix extends JFrame {
 		getContentPane().removeAll();//clears frame
 		
 		//Create Drinks
+		int x = 1; //ingredient counter
+		int y = 3; //display counter
 		
 		JPanel creating = new JPanel(new GridBagLayout());//panel to prompt user entry		
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -276,21 +287,46 @@ public class YouCanMix extends JFrame {
 		//Display prompt for cocktail name
 		JLabel cocktailName = new JLabel("Cocktail Name:");
 
-	    //Display prompt for ingredients
-	    JLabel ingredients = new JLabel("Enter Ingredients:");
+		//Display prompt for ingredients
+	    JLabel ingredient = new JLabel("Enter Ingredient " + x + ": ");
+	    JLabel quantity = new JLabel("Enter Ingredient " + x + "\'s Quantity: ");
+	    
+	    JButton Enter = new JButton("Enter");
+	    JButton moreIngredients = new JButton("More Ingredients");
 	    
 	    //might want to make multiple inputs for different ingredients/allow user to add more
 	    //have to account for quantities of each ingredient/ make user input
 	
-
+	    moreIngredients.addActionListener(new ActionListener() {//WHEN MORE INGREDIENTS BUTTON IS PRESSED
+	        @Override
+	        public void actionPerformed(ActionEvent event) {
+	        	x++;
+	        	constraints.gridx = 0;
+	            constraints.gridy = y;     
+	            creating.add(ingredient, constraints); //LABEL FOR INGREDIENT X
+	             
+	            constraints.gridx = 1;
+	            creating.add(textIngredient, constraints);//TEXT BOX FOR INGREDIENTS
+	            
+	            constraints.gridx = 0;
+	            constraints.gridy = y + 1;     
+	            creating.add(quantity, constraints); //LABEL FOR QUANTITIES
+	            
+	            constraints.gridx = 1;
+	            creating.add(textQuantity, constraints); //TEXT BOX FOR QUANTITIES
+	            
+	            constraints.gridx = 2;
+	            creating.add(moreIngredients, constraints); //ALLOWS USER TO ADD MORE INGREDIENTS
+	            y = y + 2;
+	        }
+	    });
 
 
 	    //button to be triggered once cocktail is fully inputed
-	    JButton Enter = new JButton("Enter");
-	    Enter.addActionListener(new ActionListener() {
+	    Enter.addActionListener(new ActionListener() {//WHEN ENTER BUTTON IS PRESSED
 	        @Override
 	        public void actionPerformed(ActionEvent event) {//needs to be updated to add cocktail to database***
-	            String s = findTextField.getText().toUpperCase().trim();
+	            String s = findTextField.getText().toLowerCase().trim();
 	            if (!s.equals("")) {
 	                findTextField.setText(s);
 	            }
@@ -299,35 +335,46 @@ public class YouCanMix extends JFrame {
 	        }
 	    });
 	    
-	 // add components to the panel
+	 // inital components to the panel
         constraints.gridx = 0;
         constraints.gridy = 0;     
-        creating.add(cocktailName, constraints);
+        creating.add(cocktailName, constraints); //LABEL FOR NAME OF DRINK
  
         constraints.gridx = 1;
-        creating.add(textCocktailName, constraints);
+        creating.add(textCocktailName, constraints); //TEXT BOX FOR NAME OF DRINK
          
         constraints.gridx = 0;
         constraints.gridy = 1;     
-        creating.add(ingredients, constraints);
+        creating.add(ingredient, constraints); //LABEL FOR INGREDIENT X
          
         constraints.gridx = 1;
-        creating.add(textIngredients, constraints);
-         
+        creating.add(textIngredient, constraints);//TEXT BOX FOR INGREDIENTS
+        
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 2;     
+        creating.add(quantity, constraints); //LABEL FOR QUANTITIES
+        
+        constraints.gridx = 1;
+        creating.add(textQuantity, constraints); //TEXT BOX FOR QUANTITIES
+        
+        constraints.gridx = 2;
+        creating.add(moreIngredients, constraints); //ALLOWS USER TO ADD MORE INGREDIENTS
+         
+        
+        constraints.gridx = 0;
+        constraints.gridy = y + 1;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         creating.add(Enter, constraints);
         
         constraints.gridx = 0;
-        constraints.gridy = 3;
+        constraints.gridy = y + 2;
         constraints.gridwidth = 4;
         constraints.anchor = GridBagConstraints.WEST;
         creating.add(Menu, constraints);
         
         constraints.gridx = 0;
-        constraints.gridy = 3;
+        constraints.gridy = y + 2;
         constraints.gridwidth = 4;
         constraints.anchor = GridBagConstraints.EAST;
         creating.add(Exit, constraints);
@@ -350,7 +397,6 @@ public class YouCanMix extends JFrame {
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.insets = new Insets(10, 10, 10, 10);
 
-		JButton findButton = new JButton("Search");
 		JLabel findLabel = new JLabel("Search:");
 	    
 	    constraints.gridx = 0;
