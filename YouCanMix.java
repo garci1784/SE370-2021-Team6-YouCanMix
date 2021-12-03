@@ -24,7 +24,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-public class test extends JFrame {
+public class YouCanMix extends JFrame {
     
 	private int x = 1; //ingredient counter
 	private String FullIngredient;//Holds all the ingredients/quantities
@@ -55,7 +55,7 @@ public class test extends JFrame {
     private JButton moreIngredients = new JButton("More Ingredients");
     
  	
-	public test() {
+	public YouCanMix() {
 		// displays YouCanMix title on every window
 		super("YouCanMix");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -485,7 +485,7 @@ public class test extends JFrame {
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
-			      	new test().setVisible(true);
+			      	new YouCanMix().setVisible(true);
 			}
 		});
 		//Creates drinks table in MySQL DB
