@@ -8,28 +8,36 @@ import JDBC.JDBCUtil;
 
 import java.sql.*;
 
-public class CreateDrinkTable {
+public class CreateSQLTables {
 
-    public CreateDrinkTable() {
+    public CreateSQLTables() {
 
         Connection conn = null;
         try {
             conn = JDBCUtil.getConnection();
 
-            // create sql string
-            String tableName = "drinks";
-            String SQL = "create table " + tableName + " ( " +
-                    "drink_name varchar(20) not null, " +
-                    "ingredients varchar(250) not null, " +
+            // create sql strings
+            String drinkTableName = "drinks";
+            String ingredientsTableName = "ingredients";
+            String SQLDrinksTable = "create table " + drinkTableName + " ( " +
+                    "drink_name varchar(30) not null, " +
+                    //TODO remove ingredients from drink table
+                    //"ingredients varchar(30) not null, " +
                     "rating integer not null, " +
                     "primary key(drink_name))";
-            boolean tableExists = tableExistsSQL(conn, tableName);
+            String SQLIngredientsTable = "create table " + ingredientsTableName + " ( " +
+                    "drink_name varchar(30) not null, " +
+                    "ingredients varchar(30) not null, " +
+                    "quantity integer not null)";
+            boolean drinksTableExists = tableExistsSQL(conn, drinkTableName);
+            boolean ingredientsTableExists = tableExistsSQL(conn, ingredientsTableName);
             Statement stmt = null;
-            if (!tableExists)
+            if (!drinksTableExists && !ingredientsTableExists)
             {
                 try {
                     stmt = conn.createStatement();
-                    stmt.executeUpdate(SQL);
+                    stmt.executeUpdate(SQLDrinksTable);
+                    stmt.executeUpdate(SQLIngredientsTable);
                 } finally {
                     JDBCUtil.closeStatement(stmt);
                 }
@@ -37,13 +45,16 @@ public class CreateDrinkTable {
                 JDBCUtil.commit(conn);
 
                 System.out.println("Drinks table created");
+                System.out.println("Ingredients table created");
             }
             else
             {
                 System.out.println("Drinks table already created");
+                System.out.println("Ingredients table already created");
             }
 
-        } catch (SQLException e) {
+        }  // end try
+        catch (SQLException e) {
             e.printStackTrace();
         } finally {
             JDBCUtil.closeConnection(conn);
