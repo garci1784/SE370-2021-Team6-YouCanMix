@@ -20,7 +20,7 @@ public class DrinkGUI extends JFrame{
 	private int num_Drinks = 100;
 	private int currentSize = 0;
 	
-	private DrinkManager manager = new DrinkManager(); //DATABASE OBJECT ACCESSOR	
+	private DrinkManagerDAO manager = new DrinkManagerDAO(); //DATABASE OBJECT ACCESSOR	
 	private Drink currentDrink; //HOLDS THE CURRENT DRINK WE ARE WORKING WITH
 	private Drink[] currentDrinks = new Drink[num_Drinks]; //HOLDS THE CURRENT DRINKS WE ARE WORKING WITH
 	

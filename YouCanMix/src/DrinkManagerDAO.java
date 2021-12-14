@@ -2,7 +2,7 @@ import JDBC.JDBCUtil;
 
 import java.sql.*;
 
-public class DrinkManager
+public class DrinkManagerDAO
 {
 	private int currentSize = 0;//NUM OF DRINKS CURRENTLY WORKING WITH
 	private int num_Drinks = 100;//MAX NUM OF DRINKS
@@ -13,7 +13,7 @@ public class DrinkManager
 	private Connection conn = null;
 
 	//DEFAULT CONSTRUCTOR
-	public DrinkManager() {};
+	public DrinkManagerDAO() {};
 	
     //CONNECTS AND INSERTS DRINK INTO THE DATABASE
     public boolean insertDrink(Drink currentDrink) throws ClassNotFoundException
