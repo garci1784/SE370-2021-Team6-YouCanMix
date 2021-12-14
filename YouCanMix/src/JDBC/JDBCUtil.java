@@ -14,8 +14,8 @@ public class JDBCUtil
     {
         // Construct the connection URL
         String dbURL = "jdbc:mysql://localhost:3306/youcanmix";
-        String userId = "root";
-        String password = "Ellisbest1";
+        String userId = "Mixer";
+        String password = "Mixer1";
 
 
         Class.forName("com.mysql.cj.jdbc.Driver");

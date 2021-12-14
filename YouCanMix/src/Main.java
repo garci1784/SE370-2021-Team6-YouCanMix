@@ -1,5 +1,6 @@
-import SQL.CreateSQLTables;
 import javax.swing.*;
+import SQL.CreateSQLTables;
+
 
 public class Main{
 	//starts the program
@@ -11,7 +12,7 @@ public class Main{
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
-			      	new GUI().setVisible(true);
+			      	new DrinkGUI().setVisible(true);
 			}
 		});
 		//Creates drinks table in MySQL DB
