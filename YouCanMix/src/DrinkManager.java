@@ -53,6 +53,40 @@ public class DrinkManager
 		return false;//DRINK WASN'T ADDED TO DATABASE
     }
     
+    public boolean insertRate(Drink currentDrink, int r) throws ClassNotFoundException{
+    	try {
+        	
+        	//SETS UP AND CONNECTS TO THE DATBASE
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = JDBCUtil.getConnection();
+            
+            //MAKES ENTRY PROMPT
+            String SQL = "update Drinks set Rating = ? where Drink_Name = ?";
+            PreparedStatement stmt = conn.prepareStatement(SQL);
+
+            //ENTERS DATA INTO PROPER COLUMN
+            stmt.setInt(1, r);
+            stmt.setString(2, currentDrink.getDrinkName());
+            
+            //PUSHS/CHECKS THAT DATABASE HAS BEEN UPDATED
+            validation = stmt.executeUpdate();
+            conn.commit();
+
+        }
+        catch (SQLException e)//CATCHES ERROR
+        {
+            System.out.println(e.getMessage());
+            JDBCUtil.rollback(conn);
+        }
+        finally {//CLOSES THE CURRENT CONNECTION WITH THE DATABASE
+            JDBCUtil.closeConnection(conn);
+        }
+
+    	if(validation > 0)return true;//RATING WAS ADDED TO DATABASE
+        
+		return false;//RATING WASN'T ADDED TO DATABASE
+    }
+    
     //GETS DRINKS FROM THE DATABASE
     public Drink[] getDrinks(String ES)throws ClassNotFoundException{
     	currentSize = 0;

@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>youcanmixDB.sql</name>
+			<type>1</type>
+			<location>C:/Users/Josef/Documents/dumps/youcanmix.sql</location>
+		</link>
+	</linkedResources>
 </projectDescription>

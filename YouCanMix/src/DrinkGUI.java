@@ -30,8 +30,7 @@ public class DrinkGUI extends JFrame{
 	private JFrame searchDrinkFrame = new JFrame(); //SEARCH DRINK FRAME
 	private JFrame rateDrinkFrame = new JFrame(); //RATE DRINK FRAME
 	
-	private int rateSelection = 1; //USER RATING OF DRINK
-	protected JPanel Rating; //ACTIVE RATING PANEL
+	protected JPanel RatingPanel; //ACTIVE RATING PANEL
 	protected JPanel rate; //RATE PANEL
 	protected JPanel search; //SEARCH PANEL
 
@@ -40,12 +39,10 @@ public class DrinkGUI extends JFrame{
 	private boolean bk = true;//TRUE GOES BACK TO CATALOGUE AND FALSE GOES BACK TO SEARCH
 	private boolean sr = true;//TRUE GOES TO RATE FRAME AND FALSE GOES TO DRINK TABLE
 	private boolean active = true;//TOGGLES LIST SELECTION LISTENER
-	private int clicks = 0;
 	private int select;//HOLDS THE SELECTION FROM THE TABLE
 	
 	private String[] currentIngredient = new String[num_Drinks];
     private String[] currentQuantity = new String[num_Drinks];
-	//private int[] currentRating = new int[num_Drinks];
 	
     //CREATES A DEFAULT TABLE MODEL AND AN JTABLE
 	private DefaultTableModel defaultTableModel = new DefaultTableModel();
@@ -75,6 +72,7 @@ public class DrinkGUI extends JFrame{
  	private	JButton Create = new JButton("Create a Drink");
  	private	JButton findButton = new JButton("Search");
  	private	JButton Back = new JButton("Back");
+ 	private JButton Next = new JButton("Next Drink");
 
  	
  	//ADD DRINK BUTTONS
@@ -82,9 +80,9 @@ public class DrinkGUI extends JFrame{
     private JButton moreIngredients = new JButton("More Ingredients");
     
     //IMAGES ADDED TO GUI
-	private Image icon = Toolkit.getDefaultToolkit().getImage("C:\\Users\\Josef\\Desktop\\YouCanMixFolder\\icon.jpg");    
-	private Image star = Toolkit.getDefaultToolkit().getImage("C:\\Users\\Josef\\Desktop\\YouCanMixFolder\\Star.jpg");    
-	private Image NoStar = Toolkit.getDefaultToolkit().getImage("C:\\Users\\Josef\\Desktop\\YouCanMixFolder\\NoStar.jpg");    
+	private Image icon = Toolkit.getDefaultToolkit().getImage("src/Icons/icon.jpg");    
+	private Image star = Toolkit.getDefaultToolkit().getImage("src/Icons/Star.jpg");    
+	private Image NoStar = Toolkit.getDefaultToolkit().getImage("src/Icons/NoStar.jpg");    
  	
 	public DrinkGUI() {
 		// displays YouCanMix title on every window
@@ -126,13 +124,12 @@ public class DrinkGUI extends JFrame{
 				System.exit(0);
 			}
 		});
-		
-		
+	
 		Search.addActionListener(new ActionListener() {//	WHEN SEARCH FOR DRINKS BUTTON IS PRESSED
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				bk = false;
-				sr = true;
+				sr = false;
 				searchDrinks();
 			}
 		});	
@@ -205,6 +202,7 @@ public class DrinkGUI extends JFrame{
 				if(sr == false) {
 					fillTable();
 					searchDrinks();
+					Parameter = "*";
 				}
 				else {
 					System.out.println("Rating selection");
@@ -212,9 +210,6 @@ public class DrinkGUI extends JFrame{
 					rateDrinks();
 				}
 				
-				
-				
-				Parameter = "*";
 			}
 		}); 
 		Rate.addActionListener(new ActionListener() {//	WHEN RATE DRINKS BUTTON IS PRESSED
@@ -225,6 +220,24 @@ public class DrinkGUI extends JFrame{
 			}
 		});
 		
+		//GOES TO THE NEXT DRINK RATING
+		Next.addActionListener(new ActionListener() {//	WHEN CREATE DRINKS BUTTON IS PRESSED
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				rateDrinkFrame.removeAll();
+				rateDrinkFrame.setVisible(false);
+				x++;
+				if (x <= manager.getCurrentSize()) {
+					ratingSelection();
+					rateDrinks();
+				}
+				else {
+					noDrinkError();
+					x = 1;
+					rateDrinks();
+				}
+			}
+		}); 
 		
 		//CREATE DRINKS FUNCTION CALLS
 		Create.addActionListener(new ActionListener() {//	WHEN CREATE DRINKS BUTTON IS PRESSED
@@ -331,7 +344,6 @@ public class DrinkGUI extends JFrame{
 	public void mainMenu() {	
 		
 		getContentPane().removeAll();//clears frame
-		System.out.println("IN MAIN MENU FUNCTION");
 
 		//Main menu
 		
@@ -503,10 +515,11 @@ public class DrinkGUI extends JFrame{
 		constraints.gridx = 0;
         constraints.gridy = 0;
         rating.add(search, constraints);//ADDS SEARCH BAR TO SEARCHING PANEL
-		
         
+        constraints.gridx = 0;
+        constraints.gridy = 1;
         if(Parameter != "*") {//IF SOMETHING HAS BEEN SEARCHED FOR
-        	rating.add(Rating, constraints);//ADD TABLE OF RELEVANT DRINKS
+        	rating.add(RatingPanel, constraints);//ADD TABLE OF RELEVANT DRINKS
 		}
 		else {//SETS BORDER TO THE SEARCHING PANEL
 			rating.setBorder(BorderFactory.createTitledBorder(
@@ -540,84 +553,134 @@ public class DrinkGUI extends JFrame{
 	
 	public void ratingSelection(){
 		
-		currentSize = manager.getCurrentSize();//NUM OF DRINKS BEING PUT INTO
-		
-		JPanel Rating = new JPanel(new GridBagLayout());
+		RatingPanel = new JPanel(new GridBagLayout());
 		
 		GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(10, 10, 10, 10);
 		
-		
-		while( x <= currentSize ) {
-			JLabel title = new JLabel("Cocktail Name: " + 
-					currentDrinks[x-1].getDrinkName() + "Rating: ");
-			
-			constraints.gridx = 0;
-            constraints.gridy = x;
-			Rating.add(title, constraints);
-			
-			JButton one = new JButton();
-			
-			constraints.gridx = 1;
-            constraints.gridy = x;
-			Rating.add(one);
-			one.addActionListener(new ActionListener() {//WHEN ONE STAR IS PRESSED
-		        @Override
-		        public void actionPerformed(ActionEvent event) {
-		        	
+        JLabel title = new JLabel("Cocktail Name:  " + 
+        		currentDrinks[x-1].getDrinkName() + "    Rate: ");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        RatingPanel.add(title, constraints);
+        
+        
+        JButton one = new JButton();
+        one.setIcon(new ImageIcon(NoStar));
+					
+        constraints.gridx = 1;
+        RatingPanel.add(one);
+        one.addActionListener(new ActionListener() {//WHEN ONE STAR IS PRESSED
+        	@Override
+        	public void actionPerformed(ActionEvent event) {
+        		try {
+					success = manager.insertRate(currentDrinks[x-1], 1);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+        		if(success) {//IF RATING WAS SUCCESSFULLY ADDED
+		        	rateAdded();
 		        }
-		
-			});
-			JButton two = new JButton();
-			
-			constraints.gridx = 2;
-            constraints.gridy = x;
-			Rating.add(two);
-			two.addActionListener(new ActionListener() {//WHEN TWO STAR IS PRESSED
-		        @Override
-		        public void actionPerformed(ActionEvent event) {
-		        	
+		        else rateNotAdded();// IF RATING WAS NOT ADDED
+        	}
+				
+        });
+        
+        
+        JButton two = new JButton();
+        two.setIcon(new ImageIcon(NoStar));
+					
+        constraints.gridx = 2;
+        RatingPanel.add(two);
+        two.addActionListener(new ActionListener() {//WHEN TWO STAR IS PRESSED
+        	@Override
+        	public void actionPerformed(ActionEvent event) {
+        		try {
+        			success = manager.insertRate(currentDrinks[x-1], 2);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+        		if(success) {//IF RATING WAS SUCCESSFULLY ADDED
+		        	rateAdded();
 		        }
-		
-			});
-			JButton three = new JButton();
-			
-			constraints.gridx = 3;
-            constraints.gridy = x;
-			Rating.add(three);
-			three.addActionListener(new ActionListener() {//WHEN THREE STAR IS PRESSED
-		        @Override
-		        public void actionPerformed(ActionEvent event) {
-		        	
+		        else rateNotAdded();// IF RATING WAS NOT ADDED
+        	}
+        	
+        });
+        
+        
+        JButton three = new JButton();
+        three.setIcon(new ImageIcon(NoStar));
+					
+        constraints.gridx = 3;
+        RatingPanel.add(three);
+        three.addActionListener(new ActionListener() {//WHEN THREE STAR IS PRESSED
+        	@Override
+        	public void actionPerformed(ActionEvent event) {
+        		try {
+        			success = manager.insertRate(currentDrinks[x-1], 3);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+        		if(success) {//IF RATING WAS SUCCESSFULLY ADDED
+		        	rateAdded();
 		        }
-		
-			});
-			JButton four = new JButton();
-			
-			constraints.gridx = 4;
-            constraints.gridy = x;
-			Rating.add(four);
-			four.addActionListener(new ActionListener() {//WHEN FOUR STAR IS PRESSED
-		        @Override
-		        public void actionPerformed(ActionEvent event) {
-		        	
+		        else rateNotAdded();// IF RATING WAS NOT ADDED
+        	}
+				
+        });
+        
+        
+        JButton four = new JButton();
+        four.setIcon(new ImageIcon(NoStar));
+					
+        constraints.gridx = 4;
+        RatingPanel.add(four);
+        four.addActionListener(new ActionListener() {//WHEN FOUR STAR IS PRESSED
+        	@Override
+        	public void actionPerformed(ActionEvent event) {
+        		try {
+        			success = manager.insertRate(currentDrinks[x-1], 4);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+        		if(success) {//IF RATING WAS SUCCESSFULLY ADDED
+		        	rateAdded();
 		        }
-		
-			});
-			JButton five = new JButton();
-			
-			constraints.gridx = 5;
-            constraints.gridy = x;
-			Rating.add(five);
-			five.addActionListener(new ActionListener() {//WHEN FIVE STAR IS PRESSED
-		        @Override
-		        public void actionPerformed(ActionEvent event) {
-		        	
+		        else rateNotAdded();// IF RATING WAS NOT ADDED
+        	}
+				
+        });
+        
+        
+        JButton five = new JButton();
+        five.setIcon(new ImageIcon(NoStar));
+					
+        constraints.gridx = 5;
+        RatingPanel.add(five);
+        five.addActionListener(new ActionListener() {//WHEN FIVE STAR IS PRESSED
+        	@Override
+        	public void actionPerformed(ActionEvent event) {
+        		try {
+        			success = manager.insertRate(currentDrinks[x-1], 5);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}  
+        		if(success) {//IF RATING WAS SUCCESSFULLY ADDED
+		        	rateAdded();
 		        }
+		        else rateNotAdded();// IF RATING WAS NOT ADDED
+        	}
+				
+        });
+                
+        constraints.gridx = 6;
+        constraints.gridy = 6;
+        constraints.gridwidth = 5;
+        constraints.anchor = GridBagConstraints.CENTER;
+        RatingPanel.add(Next);
 		
-			});
-		}
 	}    
 	
 	//FILLS THE JTABLE THAT HAS A COLUMN FOR DRINK NAME AND INGREDIENTS 
@@ -876,6 +939,8 @@ public class DrinkGUI extends JFrame{
 		}
 		currentSize = 0;
 		active = true;
+		Parameter = "*";
+		x = 1;
 	}
 
 	//ERROR MESSAGE WHEN USER TRIES TO ADD TOO MANY INGREDIENTS
@@ -896,12 +961,24 @@ public class DrinkGUI extends JFrame{
 		JFrame dNAFrame = new JFrame();
         JOptionPane.showMessageDialog(dNAFrame, "Drink Not Added!", "ERROR", JOptionPane.ERROR_MESSAGE);
 	}
+	
 	//SUCCESS MESSAGE IF DRINK WAS ADDED TO DATABASE
 	public void drinkAdded() {
 		JFrame dAFrame = new JFrame();
         JOptionPane.showMessageDialog(dAFrame, "Drink Succesfully Added to Database!", "SUCCESS", JOptionPane.PLAIN_MESSAGE);
 	}
 	
+	//ERROR MESSAGE IF RATING WAS NOT ADDED TO DATABASE
+	public void rateNotAdded() {
+		JFrame rNAFrame = new JFrame();
+        JOptionPane.showMessageDialog(rNAFrame, "Rating Not Added!", "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	//SUCCESS MESSAGE IF RATING WAS ADDED TO DATABASE
+	public void rateAdded() {
+		JFrame rAFrame = new JFrame();
+        JOptionPane.showMessageDialog(rAFrame, "Rating Succesfully Added to Database!", "SUCCESS", JOptionPane.PLAIN_MESSAGE);
+	}
 	
 	
 }

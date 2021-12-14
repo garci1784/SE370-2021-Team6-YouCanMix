@@ -38,5 +38,8 @@ public class Drink {
     public int getRating() {
     	return this.rating;
     }
+    public void setRating(int r) {
+    	this.rating = r;
+    }
 
 }
